@@ -14,7 +14,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Install dependencies and build (glibc 2.31)
+      - name: Build Box64 (glibc 2.31)
         uses: docker://arm64v8/ubuntu:20.04
         with:
           entrypoint: "/bin/bash"
@@ -22,16 +22,14 @@ jobs:
             set -euo pipefail;
             export DEBIAN_FRONTEND=noninteractive;
             apt-get update;
-            apt-get install -y --no-install-recommends \
-              ca-certificates build-essential git cmake ninja-build \
-              pkg-config python3 curl wget jq checkinstall dpkg-dev \
-              gpg gpg-agent gnupg lsb-release file binutils;
-            echo 'GLIBC version:'; ldd --version | head -n1;
+            apt-get install -y git build-essential cmake ninja-build python3 wget curl file binutils pkg-config;
+            echo 'GLIBC:'; ldd --version | head -n1;
             cd /github/workspace;
             bash docker-script.sh;
             mkdir -p /github/workspace/out;
             cp -r *.deb /github/workspace/out/ || true;
             cp -r build/* /github/workspace/out/ || true;"
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
