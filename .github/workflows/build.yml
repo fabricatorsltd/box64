@@ -17,7 +17,7 @@ jobs:
       - name: Build Box64 (glibc 2.31)
         uses: docker://arm64v8/ubuntu:20.04
         with:
-          entrypoint: "/bin/bash"
+          entrypoint: /bin/bash
           args: -lc "
             set -euo pipefail;
             export DEBIAN_FRONTEND=noninteractive;
@@ -27,17 +27,23 @@ jobs:
             cd /github/workspace;
             bash docker-script.sh;
             mkdir -p /github/workspace/out;
-            cp -r *.deb /github/workspace/out/ || true;
-            cp -r build/* /github/workspace/out/ || true;"
+            cp -r debian/*.deb /github/workspace/out/ || true;"
+
+      - name: Compute tag and name
+        id: vars
+        run: |
+          echo "TAG=box64-$(date +'%Y%m%d')" >> "$GITHUB_ENV"
+          echo "RELNAME=Box64 $(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
 
       - name: Debug artifacts
-        run: ls -R /github/workspace/out || echo "No output files"
+        run: |
+          ls -l out || true
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: box64-$(date +'%Y%m%d')
-          name: Box64 $(date +'%Y-%m-%d')
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.RELNAME }}
           body: "Automated build of Box64 with glibc 2.31 compatibility."
           files: out/*
         env:
