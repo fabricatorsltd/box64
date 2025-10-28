@@ -31,9 +31,7 @@ jobs:
             bash docker-script.sh;
             mkdir -p /github/workspace/out;
             cp -r *.deb /github/workspace/out/ || true;
-            cp -r build/* /github/workspace/out/ || true;
-          "
-
+            cp -r build/* /github/workspace/out/ || true;"
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
