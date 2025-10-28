@@ -30,6 +30,9 @@ jobs:
             cp -r *.deb /github/workspace/out/ || true;
             cp -r build/* /github/workspace/out/ || true;"
 
+      - name: Debug artifacts
+        run: ls -R /github/workspace/out || echo "No output files"
+
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
