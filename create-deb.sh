@@ -47,12 +47,7 @@ for target in "${targets[@]}"; do
   rm -rf build && mkdir build && cd build || error "Could not move to build directory"
 
   # Forziamo flags compatibili con GCC 9 (armv8-a baseline)
-  cmake .. -D"$target"=1 \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_C_COMPILER=gcc \
-    -DARM_DYNAREC=ON -DBOX32=ON -DBOX32_BINFMT=ON \
-    -DCMAKE_C_FLAGS="-O2 -pipe -march=armv8-a" \
-    -DCMAKE_EXE_LINKER_FLAGS="" || error "Failed to run cmake."
+  cmake .. -D"$target"=1 -D ARM_DYNAREC=ON -D CMAKE_BUILD_TYPE=RelWithDebInfo -D BOX32=ON -D BOX32_BINFMT=ON || error "Failed to run cmake."
 
   make -j"$(nproc)" || error "Failed to run make."
 
